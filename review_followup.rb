@@ -14,6 +14,7 @@ ws = session.spreadsheet_by_key("[key]").worksheets[0]
 # clean up rows formatted from other spreadsheet
 # b = (29..43).to_a
 # b.each {|element| ws[element, 3] = ws[element, 3].split("-").first.strip}
+# ws.save()
 
 # hash to take product names and get back urls
 @product_urls = Hash.new
@@ -60,8 +61,7 @@ def generate_review_links(array)
 end
 
 # removes any whitespace,
-# splits into array on ",",
-# and pushes resulting elements into empty array b as symbols
+# and changes string to symbol
 def turn_to_symbol(string)
   string.gsub(/\s+/, "").to_sym
 end
@@ -75,6 +75,8 @@ followup.each do |user|
     products_bought = ws[user, 3].downcase
     # creates array, gets rid of leading and trailing whitespace
     product_array = products_bought.split(",").each {|e| e.strip!}
+    # doesn't work to interpolate generate_review_links method,
+    # but just inserting the output does
     links = generate_review_links(product_array)
     gmail.deliver do
       # pulls name address entered in row from followup array, column 1
